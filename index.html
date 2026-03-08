@@ -3,57 +3,59 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<title>💱 Buzios Converter</title>
+<title>Buzios Converter</title>
 <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/197/197386.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --green: #00c97b;
-    --yellow: #f5c842;
-    --blue:   #009bde;
-    --bg:     #0d1117;
-    --card:   #161d27;
-    --border: #1f2d3d;
-    --text:   #e8edf3;
-    --muted:  #5a7080;
+    --bg:       #f0f4f8;
+    --white:    #ffffff;
+    --border:   #e2e8f0;
+    --text:     #1a202c;
+    --muted:    #94a3b8;
+    --subtle:   #64748b;
+    --green:    #059669;
+    --green-bg: #ecfdf5;
+    --blue:     #2563eb;
+    --blue-bg:  #eff6ff;
+    --amber:    #d97706;
+    --amber-bg: #fffbeb;
+    --shadow:   0 1px 3px rgba(0,0,0,0.08), 0 4px 16px rgba(0,0,0,0.06);
+    --shadow-sm:0 1px 2px rgba(0,0,0,0.06);
   }
 
   body {
-    font-family: 'DM Sans', sans-serif;
+    font-family: 'Plus Jakarta Sans', sans-serif;
     background: var(--bg);
     color: var(--text);
     min-height: 100vh;
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
-    padding: 24px 16px 40px;
+    padding: 24px 16px 48px;
   }
 
   .app {
-    width: 100%;
-    max-width: 390px;
+    max-width: 400px;
+    margin: 0 auto;
   }
 
   /* Header */
   .header {
     text-align: center;
-    margin-bottom: 24px;
+    margin-bottom: 20px;
   }
   .header .flags {
-    font-size: 32px;
+    font-size: 28px;
     letter-spacing: 4px;
-    margin-bottom: 6px;
+    margin-bottom: 4px;
   }
   .header h1 {
-    font-family: 'Syne', sans-serif;
+    font-size: 20px;
     font-weight: 800;
-    font-size: 22px;
-    letter-spacing: 0.5px;
     color: var(--text);
+    letter-spacing: -0.3px;
   }
   .header p {
     font-size: 13px;
@@ -61,41 +63,45 @@
     margin-top: 2px;
   }
 
-  /* Input card */
-  .input-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 18px;
+  /* Card base */
+  .card {
+    background: var(--white);
+    border-radius: 20px;
+    box-shadow: var(--shadow);
     padding: 20px;
-    margin-bottom: 14px;
-    position: relative;
+    margin-bottom: 12px;
   }
 
+  /* Input section */
   .input-label {
-    font-size: 12px;
-    font-weight: 500;
+    font-size: 11px;
+    font-weight: 600;
     color: var(--muted);
     text-transform: uppercase;
     letter-spacing: 1px;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
   }
 
   .input-row {
     display: flex;
     align-items: center;
-    gap: 10px;
+    background: var(--bg);
+    border-radius: 14px;
+    padding: 4px 4px 4px 14px;
+    border: 2px solid transparent;
+    transition: border-color 0.2s;
+  }
+  .input-row:focus-within {
+    border-color: var(--green);
+    background: #f8fff9;
   }
 
-  .currency-badge {
-    background: rgba(0,201,123,0.12);
+  .currency-tag {
+    font-size: 18px;
+    font-weight: 800;
     color: var(--green);
-    font-family: 'Syne', sans-serif;
-    font-weight: 700;
-    font-size: 15px;
-    padding: 6px 12px;
-    border-radius: 8px;
     white-space: nowrap;
-    border: 1px solid rgba(0,201,123,0.2);
+    margin-right: 8px;
   }
 
   input[type="number"] {
@@ -103,11 +109,12 @@
     background: transparent;
     border: none;
     outline: none;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 36px;
+    font-weight: 800;
     color: var(--text);
-    font-family: 'Syne', sans-serif;
-    font-size: 32px;
-    font-weight: 700;
     text-align: right;
+    padding: 8px 10px 8px 0;
     -moz-appearance: textfield;
     width: 100%;
   }
@@ -116,134 +123,145 @@
   input[type="number"]::placeholder { color: var(--border); }
 
   /* Quick buttons */
+  .quick-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin: 16px 0 8px;
+  }
   .quick-btns {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
     gap: 8px;
-    flex-wrap: wrap;
-    margin-top: 14px;
   }
   .quick-btns button {
-    flex: 1;
-    min-width: 55px;
-    background: var(--border);
+    background: var(--bg);
     color: var(--text);
-    border: none;
-    border-radius: 10px;
-    padding: 9px 4px;
-    font-family: 'Syne', sans-serif;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 10px 4px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
     font-weight: 700;
     font-size: 14px;
     cursor: pointer;
-    transition: background 0.15s, transform 0.1s;
+    transition: all 0.15s;
   }
-  .quick-btns button:hover  { background: #2a3d50; }
-  .quick-btns button:active { transform: scale(0.94); }
+  .quick-btns button:hover  { border-color: var(--green); color: var(--green); background: var(--green-bg); }
+  .quick-btns button:active { transform: scale(0.95); }
 
-  /* Results */
-  .results {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-bottom: 14px;
-  }
-
+  /* Result cards */
   .result-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 16px 20px;
+    border-radius: 20px;
+    padding: 18px 20px;
+    margin-bottom: 10px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    transition: border-color 0.2s;
+    box-shadow: var(--shadow-sm);
   }
-  .result-card.highlight-ars { border-color: rgba(0,155,222,0.4); }
-  .result-card.highlight-usd { border-color: rgba(245,200,66,0.4);  }
+  .result-card.ars {
+    background: var(--blue-bg);
+    border: 1.5px solid #bfdbfe;
+  }
+  .result-card.usd {
+    background: var(--amber-bg);
+    border: 1.5px solid #fde68a;
+  }
 
-  .result-left {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  .result-flag { font-size: 26px; }
-  .result-info {}
+  .result-left { display: flex; align-items: center; gap: 12px; }
+  .result-flag { font-size: 28px; line-height: 1; }
+
   .result-name {
     font-size: 11px;
-    color: var(--muted);
+    font-weight: 600;
+    color: var(--subtle);
     text-transform: uppercase;
     letter-spacing: 0.8px;
+    margin-bottom: 2px;
   }
   .result-amount {
-    font-family: 'Syne', sans-serif;
-    font-size: 22px;
+    font-size: 26px;
     font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.5px;
   }
-  .result-amount.ars { color: var(--blue);   }
-  .result-amount.usd { color: var(--yellow); }
+  .result-amount.ars { color: var(--blue);  }
+  .result-amount.usd { color: var(--amber); }
 
   .result-rate {
-    font-size: 11px;
-    color: var(--muted);
     text-align: right;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--subtle);
+    line-height: 1.6;
   }
 
   /* Config */
   .config-toggle {
+    width: 100%;
+    background: var(--white);
+    border: 1.5px solid var(--border);
+    border-radius: 14px;
+    padding: 13px 18px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--subtle);
+    cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
-    background: none;
-    border: 1px solid var(--border);
-    color: var(--muted);
-    border-radius: 12px;
-    padding: 10px 18px;
-    font-size: 13px;
-    font-family: 'DM Sans', sans-serif;
-    cursor: pointer;
-    width: 100%;
-    margin-bottom: 12px;
-    transition: border-color 0.2s, color 0.2s;
+    margin-bottom: 10px;
+    transition: all 0.2s;
+    box-shadow: var(--shadow-sm);
   }
   .config-toggle:hover { border-color: var(--green); color: var(--green); }
-  .config-toggle .arrow { transition: transform 0.25s; }
+  .config-toggle .arrow { transition: transform 0.25s; font-size: 12px; }
   .config-toggle.open .arrow { transform: rotate(180deg); }
 
-  .config-panel {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 18px 20px;
-    margin-bottom: 14px;
+  .config-card {
     display: none;
+    background: var(--white);
+    border-radius: 20px;
+    box-shadow: var(--shadow);
+    padding: 20px;
+    margin-bottom: 10px;
   }
-  .config-panel.visible { display: block; }
+  .config-card.visible { display: block; }
 
   .config-row {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 14px;
     gap: 12px;
+    margin-bottom: 14px;
   }
-  .config-row:last-of-type { margin-bottom: 16px; }
 
   .config-label {
-    font-size: 13px;
-    color: var(--muted);
-    flex: 1;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
   }
-  .config-label span { display: block; font-size: 11px; color: #3a5060; }
+  .config-label small {
+    display: block;
+    font-size: 11px;
+    font-weight: 400;
+    color: var(--muted);
+    margin-top: 1px;
+  }
 
   .config-input {
     background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 8px 12px;
-    color: var(--text);
-    font-family: 'Syne', sans-serif;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 9px 12px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
     font-size: 16px;
     font-weight: 700;
+    color: var(--text);
     width: 130px;
     text-align: right;
     outline: none;
@@ -254,33 +272,47 @@
   .config-input::-webkit-inner-spin-button,
   .config-input::-webkit-outer-spin-button { -webkit-appearance: none; }
 
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 16px 0;
+  }
+
   .save-btn {
     width: 100%;
-    padding: 12px;
+    padding: 14px;
     background: var(--green);
-    color: #0d1117;
-    font-family: 'Syne', sans-serif;
-    font-weight: 800;
+    color: white;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 700;
     font-size: 15px;
     border: none;
-    border-radius: 12px;
+    border-radius: 14px;
     cursor: pointer;
     transition: opacity 0.2s, transform 0.1s;
   }
-  .save-btn:hover  { opacity: 0.88; }
+  .save-btn:hover  { opacity: 0.9; }
   .save-btn:active { transform: scale(0.97); }
 
+  .last-update {
+    text-align: center;
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 6px;
+  }
+
+  /* Toast */
   .toast {
     position: fixed;
     bottom: 28px;
     left: 50%;
     transform: translateX(-50%) translateY(80px);
-    background: var(--green);
-    color: #0d1117;
-    font-family: 'Syne', sans-serif;
-    font-weight: 700;
+    background: var(--text);
+    color: white;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 600;
     font-size: 14px;
-    padding: 10px 22px;
+    padding: 11px 24px;
     border-radius: 50px;
     transition: transform 0.3s cubic-bezier(.34,1.56,.64,1);
     pointer-events: none;
@@ -288,13 +320,6 @@
     white-space: nowrap;
   }
   .toast.show { transform: translateX(-50%) translateY(0); }
-
-  .last-update {
-    text-align: center;
-    font-size: 11px;
-    color: var(--muted);
-    margin-top: 4px;
-  }
 </style>
 </head>
 <body>
@@ -308,67 +333,71 @@
   </div>
 
   <!-- Input -->
-  <div class="input-card">
+  <div class="card">
     <div class="input-label">¿Cuántos reales?</div>
     <div class="input-row">
-      <div class="currency-badge">R$</div>
+      <div class="currency-tag">R$</div>
       <input type="number" id="reales" placeholder="0" inputmode="decimal" oninput="convertir()">
+      <button onclick="limpiar()" id="clearBtn" style="display:none;background:var(--border);border:none;border-radius:10px;width:36px;height:36px;font-size:16px;cursor:pointer;color:var(--subtle);flex-shrink:0;margin-right:4px;transition:background 0.15s;" onmouseover="this.style.background='#cbd5e1'" onmouseout="this.style.background='var(--border)'">✕</button>
     </div>
+    <div class="quick-label">Acceso rápido</div>
     <div class="quick-btns">
-      <button onclick="setValor(10)">R$10</button>
-      <button onclick="setValor(20)">R$20</button>
-      <button onclick="setValor(50)">R$50</button>
-      <button onclick="setValor(100)">R$100</button>
-      <button onclick="setValor(200)">R$200</button>
-      <button onclick="setValor(500)">R$500</button>
+      <button onclick="setValor(10)">R$ 10</button>
+      <button onclick="setValor(20)">R$ 20</button>
+      <button onclick="setValor(50)">R$ 50</button>
+      <button onclick="setValor(100)">R$ 100</button>
+      <button onclick="setValor(200)">R$ 200</button>
+      <button onclick="setValor(500)">R$ 500</button>
     </div>
   </div>
 
   <!-- Results -->
-  <div class="results">
-    <div class="result-card highlight-ars">
-      <div class="result-left">
-        <div class="result-flag">🇦🇷</div>
-        <div class="result-info">
-          <div class="result-name">Pesos Argentinos</div>
-          <div class="result-amount ars" id="ars">$ 0</div>
-        </div>
+  <div class="result-card ars">
+    <div class="result-left">
+      <div class="result-flag">🇦🇷</div>
+      <div>
+        <div class="result-name">Pesos Argentinos</div>
+        <div class="result-amount ars" id="ars">$ 0</div>
       </div>
-      <div class="result-rate" id="rate-ars">1 R$ = ?</div>
     </div>
+    <div class="result-rate" id="rate-ars">1 R$ = ?</div>
+  </div>
 
-    <div class="result-card highlight-usd">
-      <div class="result-left">
-        <div class="result-flag">💵</div>
-        <div class="result-info">
-          <div class="result-name">Dólares</div>
-          <div class="result-amount usd" id="usd">USD 0</div>
-        </div>
+  <div class="result-card usd">
+    <div class="result-left">
+      <div class="result-flag">💵</div>
+      <div>
+        <div class="result-name">Dólares</div>
+        <div class="result-amount usd" id="usd">USD 0</div>
       </div>
-      <div class="result-rate" id="rate-usd">1 R$ = USD ?<br><span id="rate-usd2" style="color:#3a5060">1 USD = ?</span></div>
+    </div>
+    <div class="result-rate">
+      <span id="rate-usd">1 R$ = ?</span><br>
+      <span id="rate-usd2" style="color:#b45309"></span>
     </div>
   </div>
 
-  <!-- Config toggle -->
+  <!-- Config -->
   <button class="config-toggle" id="toggleBtn" onclick="toggleConfig()">
     ⚙ Actualizar cotizaciones <span class="arrow">▾</span>
   </button>
 
-  <div class="config-panel" id="configPanel">
+  <div class="config-card" id="configPanel">
     <div class="config-row">
       <div class="config-label">
         R$ → Peso
-        <span>Pesos por cada real</span>
+        <small>Pesos por cada real</small>
       </div>
       <input class="config-input" id="cotReal" type="number" inputmode="decimal">
     </div>
     <div class="config-row">
       <div class="config-label">
         USD → Peso
-        <span>Pesos por cada dólar</span>
+        <small>Pesos por cada dólar</small>
       </div>
       <input class="config-input" id="cotDolar" type="number" inputmode="decimal">
     </div>
+    <hr class="divider">
     <button class="save-btn" onclick="guardar()">Guardar cotizaciones</button>
   </div>
 
@@ -379,7 +408,6 @@
 <div class="toast" id="toast">✓ Cotizaciones guardadas</div>
 
 <script>
-  // Defaults
   const DEFAULT_REAL  = 270;
   const DEFAULT_DOLAR = 1200;
 
@@ -400,50 +428,48 @@
     const reales   = parseFloat(document.getElementById("reales").value) || 0;
     const cotReal  = parseFloat(document.getElementById("cotReal").value)  || DEFAULT_REAL;
     const cotDolar = parseFloat(document.getElementById("cotDolar").value) || DEFAULT_DOLAR;
-
     const ars = reales * cotReal;
     const usd = ars / cotDolar;
-
     document.getElementById("ars").textContent = "$ " + ars.toLocaleString("es-AR", {maximumFractionDigits: 0});
     document.getElementById("usd").textContent = "USD " + usd.toFixed(2);
+    document.getElementById("clearBtn").style.display = document.getElementById("reales").value ? "block" : "none";
+  }
+
+  function limpiar() {
+    document.getElementById("reales").value = "";
+    document.getElementById("ars").textContent = "$ 0";
+    document.getElementById("usd").textContent = "USD 0";
+    document.getElementById("clearBtn").style.display = "none";
+    document.getElementById("reales").focus();
   }
 
   function updateRates() {
     const cotReal  = parseFloat(document.getElementById("cotReal").value)  || DEFAULT_REAL;
     const cotDolar = parseFloat(document.getElementById("cotDolar").value) || DEFAULT_DOLAR;
     document.getElementById("rate-ars").textContent = "1 R$ = $" + cotReal.toLocaleString("es-AR");
-    document.getElementById("rate-usd").childNodes[0].textContent = "1 R$ = USD " + (cotReal / cotDolar).toFixed(4);
+    document.getElementById("rate-usd").textContent = "1 R$ = USD " + (cotReal / cotDolar).toFixed(4);
     document.getElementById("rate-usd2").textContent = "1 USD = $" + cotDolar.toLocaleString("es-AR");
   }
 
   function setValor(v) {
     document.getElementById("reales").value = v;
+    document.getElementById("clearBtn").style.display = "block";
     convertir();
   }
 
   function toggleConfig() {
-    const panel = document.getElementById("configPanel");
-    const btn   = document.getElementById("toggleBtn");
-    panel.classList.toggle("visible");
-    btn.classList.toggle("open");
+    document.getElementById("configPanel").classList.toggle("visible");
+    document.getElementById("toggleBtn").classList.toggle("open");
   }
 
   function guardar() {
-    const real  = document.getElementById("cotReal").value;
-    const dolar = document.getElementById("cotDolar").value;
-    localStorage.setItem("real",  real);
-    localStorage.setItem("dolar", dolar);
-
+    localStorage.setItem("real",  document.getElementById("cotReal").value);
+    localStorage.setItem("dolar", document.getElementById("cotDolar").value);
     const now = new Date().toLocaleString("es-AR", {day:"2-digit", month:"2-digit", hour:"2-digit", minute:"2-digit"});
     localStorage.setItem("lastUpdate", now);
     document.getElementById("lastUpdate").textContent = "Última actualización: " + now;
-
     updateRates();
     convertir();
-    showToast();
-  }
-
-  function showToast() {
     const t = document.getElementById("toast");
     t.classList.add("show");
     setTimeout(() => t.classList.remove("show"), 2200);
