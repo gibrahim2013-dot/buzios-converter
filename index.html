@@ -8,6 +8,12 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="manifest" href="manifest.json">
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js');
+  }
+</script>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -29,7 +35,7 @@
   }
 
   body {
-    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
     background: var(--bg);
     color: var(--text);
     min-height: 100vh;
@@ -403,6 +409,16 @@
 
   <div class="last-update" id="lastUpdate"></div>
 
+  <!-- iOS install hint -->
+  <div id="iosHint" style="display:none;margin-top:14px;background:#eff6ff;border:1.5px solid #bfdbfe;border-radius:16px;padding:14px 16px;font-size:13px;color:#1e40af;line-height:1.6;position:relative;">
+    <button onclick="document.getElementById('iosHint').style.display='none';localStorage.setItem('iosHintDismissed','1')" style="position:absolute;top:10px;right:12px;background:none;border:none;font-size:16px;color:#93c5fd;cursor:pointer;">✕</button>
+    <strong>📱 Instalala en tu iPhone</strong><br>
+    Para usarla sin internet:<br>
+    1. Tocá el botón <strong>compartir</strong> ↑ (abajo en Safari)<br>
+    2. Elegí <strong>"Agregar a pantalla de inicio"</strong><br>
+    3. ¡Listo! Funciona sin wifi ni datos 🎉
+  </div>
+
 </div>
 
 <div class="toast" id="toast">✓ Cotizaciones guardadas</div>
@@ -473,6 +489,13 @@
     const t = document.getElementById("toast");
     t.classList.add("show");
     setTimeout(() => t.classList.remove("show"), 2200);
+  }
+
+  // Mostrar hint solo en iPhone y si no fue cerrado antes
+  const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent) && !window.MSStream;
+  const isStandalone = window.navigator.standalone;
+  if (isIOS && !isStandalone && !localStorage.getItem('iosHintDismissed')) {
+    document.getElementById('iosHint').style.display = 'block';
   }
 </script>
 </body>
