@@ -1,4 +1,4 @@
-const CACHE = 'buzios-v2';
+const CACHE = 'buzios-v4';
 const FILES = [
   './',
   './index.html',
