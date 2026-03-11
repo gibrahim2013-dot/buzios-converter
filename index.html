@@ -281,6 +281,7 @@
     flex-shrink: 0;
   }
   .expense-amounts { flex: 1; padding: 0 8px; }
+  .expense-lugar { font-size: 12px; font-weight: 600; color: var(--subtle); margin-bottom: 2px; }
   .expense-original { font-size: 15px; font-weight: 700; color: var(--text); }
   .expense-converted { font-size: 11px; color: var(--muted); margin-top: 1px; }
 
@@ -550,6 +551,7 @@
         <button class="cur-btn" id="cur-usd" onclick="setCurrency('USD')">💵 Dólares (USD)</button>
       </div>
       <div class="section-label">Agregar gasto</div>
+      <input type="text" id="gastoLugar" placeholder="Lugar / Descripción (ej: Cena playa)" style="width:100%;background:var(--bg);border:2px solid var(--border);border-radius:12px;padding:11px 14px;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;color:var(--text);outline:none;margin-bottom:8px;transition:border-color 0.2s;" onfocus="this.style.borderColor='var(--green)'" onblur="this.style.borderColor='var(--border)'">
       <div class="add-row">
         <div class="input-row">
           <div class="currency-tag" id="addCurrencyTag">R$</div>
@@ -700,15 +702,31 @@
       brl = ars / cotReal();
     }
 
-    gastos.push({ original: val, currency: currentCurrency, brl: brl });
+    const lugar = document.getElementById("gastoLugar").value.trim() || "—";
+    gastos.push({ original: val, currency: currentCurrency, brl: brl, lugar: lugar });
     localStorage.setItem('gastos', JSON.stringify(gastos));
     document.getElementById("gastoInput").value = "";
-    document.getElementById("gastoInput").focus();
+    document.getElementById("gastoLugar").value = "";
+    document.getElementById("gastoLugar").focus();
     renderGastos();
-    showToast("✓ Gasto agregado");
+
+    // Guardar en Sheets automáticamente
+    const arsItem = brl * cotReal();
+    const usdItem = arsItem / cotDolar();
+    const fecha = new Date().toLocaleString("es-AR", {day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"});
+    fetch(SHEETS_URL, {
+      method: "POST", mode: "no-cors",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({ fecha, lugar, reales: brl.toFixed(2), usd: usdItem.toFixed(2), pesos: Math.round(arsItem) })
+    }).catch(() => {});
+
+    showToast("✓ Gasto guardado en planilla");
   }
 
   function eliminarGasto(i) {
+    const g = gastos[i];
+    const desc = g.lugar && g.lugar !== '—' ? g.lugar : (g.currency === 'BRL' ? 'R$ ' + g.original : 'USD ' + g.original);
+    if (!confirm('¿Borrar este gasto?\n\n' + desc)) return;
     gastos.splice(i, 1);
     localStorage.setItem('gastos', JSON.stringify(gastos));
     renderGastos();
@@ -716,6 +734,7 @@
 
   function borrarTodo() {
     if (gastos.length === 0) return;
+    if (!confirm('¿Borrar TODOS los gastos?\nEsta acción no se puede deshacer.')) return;
     gastos = [];
     localStorage.setItem('gastos', JSON.stringify(gastos));
     renderGastos();
@@ -745,11 +764,13 @@
         ? 'R$ ' + g.original.toLocaleString("es-AR")
         : 'USD ' + g.original.toFixed(2);
       const flag = g.currency === 'BRL' ? '🇧🇷' : '💵';
+      const lugarStr = g.lugar && g.lugar !== '—' ? `<div class="expense-lugar">${g.lugar}</div>` : '';
 
       html += `
         <div class="expense-item">
           <div class="expense-num">${i+1}</div>
           <div class="expense-amounts">
+            ${lugarStr}
             <div class="expense-original">${flag} ${originalStr}</div>
             <div class="expense-converted">$ ${arsItem.toLocaleString("es-AR",{maximumFractionDigits:0})} · USD ${usdItem.toFixed(2)}</div>
           </div>
